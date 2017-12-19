@@ -1,0 +1,15 @@
+docker run hello-world
+
+docker run ubuntu:xenial
+docker run ubuntu:xenial echo "Hello World"
+
+docker run -it ubuntu:xenial
+  mkdir -p /home/jobscore
+  useradd -d /home/jobscore jobscore
+  su - jobscore
+
+docker run -it ubuntu:xenial
+  apt-get update && apt-get install -y curl nginx
+  service nginx start
+
+docker run -p 5050:80 nginx

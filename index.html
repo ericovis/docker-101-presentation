@@ -6,8 +6,10 @@
 
 		<title>Docker 101 - Eric Magalhães</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/reveal.min.css">
 		<link rel="stylesheet" href="css/theme/white.css">
+		<link href="https://fonts.googleapis.com/css?family=Noto+Sans|Roboto" rel="stylesheet">
+		<link rel="icon" type="image/png" sizes="32x32" href="https://www.docker.com/favicon/favicon-32x32.png">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -25,9 +27,140 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-						<h2>Docker 101</h2>
+					<h1>Docker 101</h1>
+					<h4>From nothing to something in a few minutes.</h4>
+					<br>
+					<small>Created by <a href="https://github.com/ericovis" target="_blank">Eric Magalhães</a>	 </small>
 				</section>
-				<section>Slide 2</section>
+				<section>
+					<section>
+						<p>In the begging there was just VMs</p>
+						<img src="https://www.docker.com/sites/default/files/VM%402x.png" alt="VM overview">
+					</section>
+					<section>
+						<p>VMs are hard to manage</p>
+					</section>
+					<section>
+						<p>VMs are easy to trash</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Containers share a single kernel</p>
+						<img src="https://www.docker.com/sites/default/files/Package%20software%40x2.png" alt="Docker kernel">
+					</section>
+					<section>
+						<p>Containers are stateless by design</p>
+					</section>
+					<section>
+						<p>Containers are lightweight</p>
+					</section>
+					<section>
+						<p>Containers are secure</p>
+						<code>docker run <span class="fragment highlight-blue">-p 8080:80</span> nginx</code>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Containers vs. VMs</p>
+						<img src="https://www.docker.com/sites/default/files/Container%402x.png" alt="Containers">
+						<img src="https://www.docker.com/sites/default/files/VM%402x.png" alt="VMs">
+					</section>
+					<section>
+						<p>Containers can bahave as VMs if needed</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Docker didn't invented containers</p>
+					</section>
+					<section>
+						<img class="big-media" src="https://www.docker.com/sites/default/files/Pulls-Chart%402x.png" alt="Container projects">
+					</section>
+				</section>
+				<section>
+					<p>Show me how it works</p>
+					<img class="big-media" src="https://media.giphy.com/media/l41YrI2G6EXpqXbig/giphy.gif" alt="Talking too much">
+				</section>
+				<section>
+					<h2>Questions?</h2>
+				</section>
+				<section>
+					<section>
+						<p>Containers are made of Images</p>
+						<a href="https://hub.docker.com/">hub.docker.com</a>
+					</section>
+					<section>
+						<p>Images are defined in a Dockerfile</p>
+						<pre><code data-trim data-noescape>
+							FROM scratch
+							ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /
+							CMD ["/bin/bash"]
+						</code></pre>
+					</section>
+					<section>
+						<p>To use images you need to build and tag a Dockerfile</p>
+						<code>docker build -t image_name:tag_name .</code>
+					</section>
+					<section>
+						<p>Images can be used to create other images</p>
+					</section>
+					<section>
+						<pre><code data-trim data-noescape>
+							FROM ubuntu:xenial
+							RUN apt-get update && apt-get install -y nginx \
+							  && ln -sf /dev/stdout /var/log/nginx/access.log \
+							  && ln -sf /dev/stderr /var/log/nginx/error.log
+							CMD ["nginx", "-g", "daemon off;"]
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<p>Stop talking and show me the code</p>
+					<img class="big-media" src="https://media.giphy.com/media/xT39CU8vEn8bcmiI12/giphy.gif" alt="Talking too much">
+				</section>
+				<section>
+					<h2>Questions?</h2>
+				</section>
+				<section>
+					<section>
+						<p>You can link containers together</p>
+						<pre><code data-trim data-noescape>
+							#!/bin/bash
+
+							docker run <span class="fragment highlight-blue">--name mysql</span> -d \
+								<span class="fragment highlight-green">-e MYSQL_ROOT_PASSWORD=password</span> mysql:5.7
+							docker run -e WORDPRESS_DB_PASSWORD=password \
+								<span class="fragment highlight-red">--link mysql</span> -p 8080:80 wordpress
+						</code></pre>
+					</section>
+					<section>
+						<p>But there is a better way</p>
+					</section>
+					<section>
+						<p>Docker Compose FTW!</p>
+					</section>
+					<section>
+						<pre><code data-trim data-noescape>
+							version: "3"
+							services:
+							  web:
+							    image: wordpress:latest
+							    ports:
+							      - 8080:80
+							    links:
+							      - db
+							    environment:
+							      WORDPRESS_DB_HOST: db
+							      WORDPRESS_DB_PASSWORD: password
+							  db:
+							    image: mysql:5.7
+							    environment:
+							      MYSQL_ROOT_PASSWORD: password
+						</code></pre>
+					</section>
+				</section>
+
 			</div>
 		</div>
 
