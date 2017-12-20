@@ -8,6 +8,7 @@
 
 		<link rel="stylesheet" href="css/reveal.min.css">
 		<link rel="stylesheet" href="css/theme/white.css">
+		<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Noto+Sans|Roboto" rel="stylesheet">
 		<link rel="icon" type="image/png" sizes="32x32" href="https://www.docker.com/favicon/favicon-32x32.png">
 
@@ -180,13 +181,97 @@
 						<p>We are using it in our CI</p>
 					</section>
 					<section>
-						<p>We might use it for Dev/Test in a near future</p>
-					</section>
-					<section>
-						<p></p>
+						<p>The OSX version ca be very slow <i class="em em-disappointed_relieved"></i></p>
 					</section>
 				</section>
-
+				<section>
+					<section>
+						<h2>Docker and the 12 factor app</h2>
+						<small><a href="https://12factor.net/">12factor.net</a></small>
+					</section>
+					<section>
+						<h2>II. Dependencies</h2>
+						<h5>Explicitly declare and isolate dependencies</h5>
+						<pre><code data-trim data-noescape>
+							FROM ubuntu:xenial
+							RUN apt-get update && apt-get install -y imagemagick
+						</code></pre>
+					</section>
+					<section>
+						<h2>III. Config</h2>
+						<h5>Store config in the environment</h5>
+						<pre><code data-trim data-noescape>
+							version: "3"
+							services:
+							  web:
+							    image: wordpress:latest
+							    ports:
+							      - 8080:80
+							    links:
+							      - db
+							    environment:
+							      WORDPRESS_DB_HOST: db
+							      WORDPRESS_DB_PASSWORD: password
+						</code></pre>
+					</section>
+					<section>
+						<h2>IV. Backing services</h2>
+						<h5>Treat backing services as attached resources</h5>
+						<pre><code data-trim data-noescape>
+							version: '3'
+							services:
+							  db:
+							    image: postgres:9.6
+							  web:
+							    build: .
+							    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+							    volumes:
+							      - .:/myapp
+							    ports:
+							      - "3000:3000"
+							    depends_on:
+							      - db
+						</code></pre>
+					</section>
+					<section>
+						<h2>VII. Port binding</h2>
+						<h5>Export services via port binding</h5>
+						<pre><code data-trim data-noescape>
+							version: '3'
+							services:
+							  db:
+							    image: postgres
+							  web:
+							    build: .
+							    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+							    volumes:
+							      - .:/myapp
+							    ports:
+							      - "3000:3000"
+							    depends_on:
+							      - db
+						</code></pre>
+					</section>
+					<section>
+						<h2>IX. Disposability</h2>
+						<h5>Maximize robustness with fast startup and graceful shutdown</h5>
+						<small><code>docker run <span class="fragment highlight-blue">-v /my/local/storage:/code</span> my-app:2.0</code></small>
+					</section>
+					<section>
+						<h2>X. Dev/prod parity</h2>
+						<h5>Keep development, staging, and production as similar as possible</h5>
+					</section>
+				</section>
+				<section>
+					<p>I want to use it NOW!</p>
+					<img class="big-media" src="https://media.giphy.com/media/sDcfxFDozb3bO/giphy.gif" alt="shutt up and take my money">
+				</section>
+				<section>
+					<h2>Questions?</h2>
+				</section>
+				<section>
+					<img class="big-media" src="https://media.giphy.com/media/KJ1f5iTl4Oo7u/giphy.gif" alt="shutt up and take my money">
+				</section>
 			</div>
 		</div>
 
