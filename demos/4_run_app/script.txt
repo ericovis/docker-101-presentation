@@ -1,0 +1,1 @@
+pg_restore -h localhost -p 5432 -U postgres --no-owner --no-privileges --format=c --dbname=jobscore_development ./demodatabase/itn_demo.db.dump
